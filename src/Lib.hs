@@ -25,6 +25,18 @@ readAndPrint =
                in putStrLn sx
                     >> putStrLn sy
 
+-- keduanya ekuivalen
+-- di atas dinamakan sequencing
+-- ada dua sequencing
+--  >>, menghiraukan output monad pertama
+--  >>=, memasukkan output pertama
+-- fungsi monad hanya akan dijalankan jika disequencing
+-- saat di sequencing maka akan dijalankan dan ditunggu
+-- hanya monad yang bisa disequencing
+-- di atas adalah desugarred dan di bawah sugar syntax
+-- semua kode di do akan dubah menjadi sequcing
+-- jadi semua kode harus menghasilkan monad
+
 doReadAndPrint = do
   putStrLn "Write a line: "
   x <- getLine
