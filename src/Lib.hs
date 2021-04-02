@@ -9,6 +9,7 @@ module Lib
     monadWithoutSeq,
     myRecordIncId,
     helloMyData,
+    helloMyFunction,
   )
 where
 
@@ -56,6 +57,8 @@ data MyData x = NullData | OneData x | TwoData x x deriving (Show)
 type MyDataStr = MyData String
 
 data MyRecord = MyRecord {name :: String, recId :: Int} deriving (Eq)
+
+newtype MyFunction a b = MyFunction {runFunction :: a -> b  }
 
 class Equalable x where
   equal :: x -> x -> Bool
@@ -138,6 +141,13 @@ helloList =
         print $ myList !! 3
         let mapped = flip map myList $ \x -> "My is: " ++ show x
         mapM_ putStrLn mapped
+
+helloMyFunction = 
+  let mult10 = MyFunction { runFunction = (* 10) }
+      plus10 = MyFunction (+ 10)
+  in do
+    putStrLn $ "mult10 9: " ++ show ( runFunction mult10 9 )
+    putStrLn $ "plus10 119: " ++ show ( runFunction plus10 119 )
 
 monadWithoutSeq = do
   -- this skipped until <-
