@@ -8,6 +8,7 @@ module Lib
     helloList,
     monadWithoutSeq,
     myRecordIncId, 
+    helloMyData,
   )
 where
 
@@ -50,7 +51,22 @@ doReadAndPrint = do
   putStrLn sx
   putStrLn sy
 
+
+data MyData x = NullData | OneData x | TwoData x x deriving (Show)
+type MyDataStr = MyData String
 data MyRecord = MyRecord {name :: String, recId :: Int} deriving (Eq)
+
+class Equalable x where
+  equal :: x -> x -> Bool
+  notEqual :: x -> x -> Bool
+  equal a b = not $ notEqual a b 
+  notEqual a b = not $ equal a b
+
+instance (Eq x) => Equalable (MyData x) where
+  NullData `equal` NullData = True 
+  (OneData a) `equal` (OneData b) = a == b
+  (TwoData a1 a2) `equal` (TwoData b1 b2) = (a1 == b1) && (a2 == b2)
+  _ `equal` _ = False
 
 instance Show MyRecord where
   show MyRecord {name = name, recId = rcId} = "Hello, my id " ++ show rcId ++ " and my name " ++ name
@@ -61,6 +77,37 @@ helloRecord =
         putStrLn $ name myRecord
         print myRecord
         print $ myRecordIncId myRecord
+
+helloMyData =
+  let nullData = NullData :: MyDataStr
+      oneData = OneData "Satu"
+      twoDataBuilder = TwoData "A"
+      twoData1 = twoDataBuilder "B"
+      twoData2 = twoDataBuilder "C"
+  in do
+    putStrLn "Print nullData"
+    print nullData
+    printMyData nullData
+    putStrLn "Print oneData"
+    print oneData
+    printMyData oneData
+    putStrLn "Print twoData1"
+    print twoData1
+    printMyData twoData1
+    putStrLn "Print twoData2"
+    print twoData2
+    printMyData twoData2
+    putStrLn $ "nullData == nullData = " ++ show ( equal nullData nullData )
+    putStrLn $ "oneData == oneData = " ++ show ( equal oneData oneData )
+    putStrLn $ "twoData1 == twoData1 = " ++ show ( equal twoData1 twoData1 )
+    putStrLn $ "twoData2 == twoData2 = " ++ show ( equal twoData2 twoData2 )
+    putStrLn $ "nullData == oneData = " ++ show ( equal nullData oneData )
+    putStrLn $ "twoData1 == twoData2 = " ++ show ( equal twoData1 twoData2 )
+      where
+        printMyData :: (Show x) => MyData x -> IO ()
+        printMyData NullData = putStrLn "Data is null"
+        printMyData (OneData a1) = putStrLn $ "Data is " ++ show a1
+        printMyData (TwoData a1 a2) = putStrLn $ "Data is " ++ show a1 ++ " and " ++ show a2
 
 readMyRecordIncId :: Reader MyRecord Int
 readMyRecordIncId = do
