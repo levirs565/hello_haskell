@@ -59,7 +59,7 @@ helloRecord =
   let myRecord = MyRecord {name = "AAA", recId = 1}
    in do
         putStrLn $ name myRecord
-        putStrLn $ show myRecord
+        print myRecord
         print $ myRecordIncId myRecord
 
 readMyRecordIncId :: Reader MyRecord Int
@@ -74,7 +74,7 @@ myRecordIncId = runReader readMyRecordIncId
 helloList =
   let myList = [1, 2, 3, 4, 5]
    in do
-        putStrLn $ show $ length myList
+        print $ length myList
         print $ myList !! 3
         let mapped = flip map myList $ \x -> "My is: " ++ show x
         mapM_ putStrLn mapped
