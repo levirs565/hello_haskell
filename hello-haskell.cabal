@@ -33,7 +33,8 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      base >=4.7 && <5,
+      mtl
   default-language: Haskell2010
 
 executable hello-haskell-exe

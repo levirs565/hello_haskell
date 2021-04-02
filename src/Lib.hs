@@ -7,8 +7,11 @@ module Lib
     helloRecord,
     helloList,
     monadWithoutSeq,
+    myRecordIncId, 
   )
 where
+
+import Control.Monad.Reader
 
 helloFunction :: String -> IO ()
 helloFunction = putStrLn
@@ -57,6 +60,16 @@ helloRecord =
    in do
         putStrLn $ name myRecord
         putStrLn $ show myRecord
+        print $ myRecordIncId myRecord
+
+readMyRecordIncId :: Reader MyRecord Int
+readMyRecordIncId = do
+  record <- ask
+  let myId = recId record
+  return $ myId + 1
+
+myRecordIncId :: MyRecord -> Int
+myRecordIncId = runReader readMyRecordIncId
 
 helloList =
   let myList = [1, 2, 3, 4, 5]
