@@ -69,6 +69,11 @@ instance (Eq x) => Equalable (MyData x) where
   (TwoData a1 a2) `equal` (TwoData b1 b2) = (a1 == b1) && (a2 == b2)
   _ `equal` _ = False
 
+instance Functor MyData where
+  fmap f NullData = NullData
+  fmap f (OneData a) = OneData (f a)
+  fmap f (TwoData a1 a2) = TwoData (f a1) (f a2)
+
 instance Show MyRecord where
   show MyRecord {name = name, recId = rcId} = "Hello, my id " ++ show rcId ++ " and my name " ++ name
 
@@ -85,6 +90,7 @@ helloMyData =
       twoDataBuilder = TwoData "A"
       twoData1 = twoDataBuilder "B"
       twoData2 = twoDataBuilder "C"
+      myFunc = ("Hai " ++)
    in do
         putStrLn "Print nullData"
         print nullData
@@ -104,6 +110,12 @@ helloMyData =
         putStrLn $ "twoData2 == twoData2 = " ++ show (equal twoData2 twoData2)
         putStrLn $ "nullData == oneData = " ++ show (equal nullData oneData)
         putStrLn $ "twoData1 == twoData2 = " ++ show (equal twoData1 twoData2)
+        putStrLn "nullData fmap"
+        printMyData $ fmap myFunc nullData
+        putStrLn "oneData fmap"
+        printMyData $ fmap myFunc oneData
+        putStrLn "twoData1 fmap"
+        printMyData $ fmap myFunc twoData1
   where
     printMyData :: (Show x) => MyData x -> IO ()
     printMyData NullData = putStrLn "Data is null"
